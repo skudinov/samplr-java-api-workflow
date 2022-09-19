@@ -1,0 +1,42 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  SQSQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      Tags:
+        - Key: project
+          Value: samplr-java-api-workflow
+        - Key: workshop
+          Value: epam-jdd-krakow-2022
+
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref SQSQueue
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal: '*'
+          Action: sqs:*
+          Resource: '*'
+          Condition:
+            ArnEquals:
+              aws:SourceArn: 'arn:aws:iam::*:role/sam-app-SpringBootServiceA-*'
+
+Outputs:
+  QueueURL:
+    Description: URL of newly created SQS Queue
+    Value: !Ref SQSQueue
+  QueueARN:
+    Description: ARN of newly created SQS Queue
+    Value: !GetAtt
+      - SQSQueue
+      - Arn
+  QueueName:
+    Description: Name newly created SQS Queue
+    Value: !GetAtt
+      - SQSQueue
+      - QueueName

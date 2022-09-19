@@ -1,0 +1,19 @@
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  samplr-java-api-workflow
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  Queue:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./templates/sqs.yaml
+
+Outputs:
+  QueueURL:
+    Description: URL of newly created SQS Queue
+    Value: !GetAtt Queue.Outputs.QueueURL

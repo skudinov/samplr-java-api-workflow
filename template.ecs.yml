@@ -1,0 +1,67 @@
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  samplr-java-api-workflow
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  VpcCIDR:
+    Type: String
+    Default: 10.215.0.0/16
+    Description: CIDR of the VPC
+
+  PublicCidrA:
+    Type: String
+    Default: 10.215.10.0/24
+    Description: CIDR of the Subnet 1
+
+  PublicCidrB:
+    Type: String
+    Default: 10.215.20.0/24
+    Description: CIDR of the Subnet 2
+
+Resources:
+
+  VPC:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./templates/vpc.yaml
+      Parameters:
+        Name: !Ref AWS::StackName
+        VpcCIDR: !Ref VpcCIDR
+        PublicCidrA: !Ref PublicCidrA
+        PublicCidrB: !Ref PublicCidrB
+
+  Cluster:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./templates/ecs-cluster.yaml
+
+  LoadBalancerA:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./templates/load-balancer.yaml
+      Parameters:
+        Subnets: !GetAtt VPC.Outputs.PublicSubnets
+        VpcId: !GetAtt VPC.Outputs.VpcId
+
+  Queue:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./templates/sqs.yaml
+
+  SpringBootServiceA:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./templates/service.yaml
+      Parameters:
+        AppName: service-a
+        AppPort: 8080
+        VpcId: !GetAtt VPC.Outputs.VpcId
+        Cluster: !GetAtt Cluster.Outputs.ClusterName
+        TargetGroup: !GetAtt LoadBalancerA.Outputs.TargetGroup
+        SourceSecurityGroup: !GetAtt LoadBalancerA.Outputs.SecurityGroup
+        Subnets: !GetAtt VPC.Outputs.PublicSubnets
