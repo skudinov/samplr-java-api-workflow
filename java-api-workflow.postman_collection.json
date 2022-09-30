@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "4bca4ba0-81fb-41fd-bacf-042f8695577b",
+		"name": "Samplr: Java API Workflow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18337498"
+	},
+	"item": [
+		{
+			"name": "Start workflow and wait for reply ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Id",
+						"value": "user123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"insurancePackage\": \"Family+\",\r\n    \"address\": \"Dream Av. 1\",\r\n    \"broker\": \"The Best Health Insurance For All\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/applications?projection=reply",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"applications"
+					],
+					"query": [
+						{
+							"key": "projection",
+							"value": "reply"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start workflow and return, NO wait",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Id",
+						"value": "user123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"insurancePackage\": \"Family+\",\r\n    \"address\": \"Dream Av. 1\",\r\n    \"broker\": \"The Best Health Insurance For All\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/applications",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"applications"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

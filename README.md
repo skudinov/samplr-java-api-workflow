@@ -13,7 +13,8 @@ It should be ok to run with AWS free tier account with minimal or no costs.
 1. `sam build`
 1. `sam deploy --guided`
 1. Copy & paste queue url from stack creation outputs to `application.properties`
-1. Import postman collection and run http://localhost:8080/applications?projection=reply  
+1. Run java project, the API url is:  http://localhost:8080/applications  
+1. Import [postman collection](java-api-workflow.postman_collection.json) and run two requests: with and w/o reply
 1. After use undeploy stack: `sam delete`
 
 ## Architecture
