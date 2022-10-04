@@ -101,12 +101,13 @@ public class MessageRouter {
     }
 
     ReplyMessage handle(RequestMessage requestMessage) {
+        var state = requestMessage.routingSlip().currentStep().state();
         return handlers.stream()
-                .filter(handler -> handler.workflowState().equals(requestMessage.routingSlip().currentStep().state()))
+                .filter(handler -> handler.workflowState().equals(state))
                 .findFirst()
                 .map(handler -> handler.receive(requestMessage))
                 .map(replyMessage -> replyMessage.request(requestMessage))
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Handler not found, state: " + state));
     }
 
 
